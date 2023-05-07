@@ -4,6 +4,7 @@ from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
+import pinecorn
 
 
 @app.route('/')
@@ -64,3 +65,15 @@ def get_count():
     """
     counter = Counters.query.filter(Counters.id == 1).first()
     return make_succ_response(0) if counter is None else make_succ_response(counter.count)
+
+
+
+@app.route('/api/knowledge_query', methods=['GET'])
+def knowledge_query():
+    """
+    :return: 知识查询：向量库查询->返回查询结果
+    """
+    pinecone.init(api_key="a0329caf-17d6-4165-99c1-9678fe2d6dbe", environment="us-east-1-aws")
+
+
+    return make_succ_response(pinecone.list_indexes())
